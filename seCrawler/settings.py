@@ -21,6 +21,10 @@ USER_AGENT = "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, lik
 DEPTH_LIMIT = 1
 
 
+SERVICE_PORT = 8080
+DOWNLOAD_DELAY = 3
+CONCURRENT_REQUESTS_PER_DOMAIN = 1
+TELNETCONSOLE_ENABLED = False
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 # USER_AGENT = 'seCrawler (+http://www.yourdomain.com)'
