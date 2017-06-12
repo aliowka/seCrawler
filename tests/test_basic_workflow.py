@@ -34,7 +34,6 @@ class BasicTestCase(unittest.TestCase):
 
         # Remaining code checks we got those 3 urls in among results
         expected_urls = ["http://recongate.com/",
-                         "https://wwww.linkedin.com/company/recongate",
                          "https://www.facebook.com/ReconGate-1367244313333677/"]
 
         for r in output["results"]:

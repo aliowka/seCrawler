@@ -11,7 +11,7 @@ class keywordSpider(Spider):
     keyword = None
     searchEngine = None
     selector = None
-
+    items = []
 
     def __init__(self, keyword, se = 'bing', pages = 50,  *args, **kwargs):
         super(keywordSpider, self).__init__(*args, **kwargs)
@@ -22,6 +22,12 @@ class keywordSpider(Spider):
         for url in pageUrls:
             print(url)
             self.start_urls.append(url)
+
+    def _xpath(self, selector, xp, extract=True):
+        res = selector.xpath(xp).extract() if extract else selector.xpath(xp)
+        if res and type(res) == list:
+            return " ".join(res)
+        return res
 
     def parse(self, response):
         for url in Selector(response).xpath(self.selector).extract():
