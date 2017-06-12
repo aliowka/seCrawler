@@ -1,25 +1,36 @@
-# seCrawler(Search Engine Crawler)
-A scrapy project can crawl search result of Google/Bing/Baidu
+# REST API overview
+This doc describes a couple of changes wich were made to seCrawler.
 
-## prerequisite
-python 2.7 and scrapy is needed.
+REST API server was added. Provided by `CrawlerAPI` class it currently
+supports only GET request of the following format:
 
+> `http://host:port/crawl?se=google&keyword=hello&pages=10`
 
-## commands
+Where each parameter is mandatory:
 
-run one command to get 50 pages result from search engine with keyword, the result would be kept in the "urls.txt" under the current directory.
+   * keyword - string specifying the keyword to search
+   * se - string sepcifying search enginge to use (Currently only 'google' is supported)
+   * pages - string specifying max number of pages to crawl
 
+The original `keywordsSpider` was slightly modified:
 
-####Bing
-```scrapy crawl keywordSpider -a keyword=Spider-Man -a se=bing -a pages=50```
+   * `items = []` field added to store extracted items, so that it would be easily accessed from the runner
+   * `_xpath` method was added to simplify xpath extraction from given selector. This should be used in derived classes.
 
-####Baidu
-```scrapy crawl keywordSpider -a keyword=Spider-Man -a se=baidu -a pages=50```
+There was `CrawlersManager` class added, which is responsible for dynamic loading
+of spiders from spiders directory.
 
-####Google
-```scrapy crawl keywordSpider -a keyword=Spider-Man -a se=google -a pages=50```
+Now adding the extraction of results from a new search engine boils down to
+adding `SearchEngines` start url and adding a new spider to spiders directory.
 
-## limitation
-The project doesn't provide any workaround to the anti-spider measure like CAPTCHA, IP ban list, etc. 
+It should be derived from the `keywordsSpider` and it should be named with unique
+name, so that it will be referred with from url parameter `se`.
 
-But to reduce these measures, we recommand to set ```DOWNLOAD_DELAY=10``` in settings.py file to add a temporisation (in second) between the crawl of two pages, see details in [Scrapy Setting](https://doc.scrapy.org/en/1.2/topics/settings.html#std:setting-DOWNLOAD_DELAY).
+There was a basic test added: `tests.test_basic_workflow` which makes end to end
+sunnity check by running `CrawlerAPI.render_GET` with the dummy request and
+ by running the a crawler infront of a search engine, and checking first couple
+ result (urls).
+
+ Run the test with:
+
+ > `trial tests/test_basic_workflow.py`
